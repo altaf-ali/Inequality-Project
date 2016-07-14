@@ -16,5 +16,6 @@ geoepr <- rgdal::readOGR(dirname(geo_epr_path), basename(geo_epr_path))
 
 params <- data_frame(gwn = unique(geoepr$gwid)) %>%
   mutate(task_id = row_number()) %>%
+  select(task_id, gwn) %>%
   write_csv(make_path(config$output, config$output$params))
 
