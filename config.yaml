@@ -1,0 +1,14 @@
+---
+logging:
+  level: DEBUG
+  
+datasets:
+  root: ~/datasets
+  noaa: noaa
+  geo_epr: geoEPR/2014/GeoEPR-2014
+  gpw: gpw/gldens00/glds00ag/w001001.adf
+  natural_earth: natural_earth/ne_50m_admin_0_countries
+  
+output:
+  root: output
+  params: params.csv
