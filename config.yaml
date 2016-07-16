@@ -1,4 +1,7 @@
 ---
+job:
+  name: grids
+  
 logging:
   level: DEBUG
   
@@ -10,5 +13,5 @@ datasets:
   natural_earth: natural_earth/ne_50m_admin_0_countries
   
 output:
-  root: output
+  root: ~/Scratch/inequality
   params: params.csv
