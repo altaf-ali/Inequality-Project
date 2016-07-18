@@ -4,6 +4,7 @@ library(argparse)
 library(logging)
 library(yaml)
 library(countrycode)
+library(nightlight)
 library(dplyr)
 library(readr)
 
@@ -17,12 +18,17 @@ args <- arg_parser$parse_args()
 
 config <- yaml.load_file(args$config)
 
+dataset_path <- function(config, dataset) {
+    path.expand(file.path(config$datasets$root, dataset))
+}
+  
 params <- read_csv(args$params)
 task <- params[args$task_id,]
 
-for (path in c(task$log, task$data)) {
-  if (!dir.exists(path)) 
-    dir.create(path, recursive=TRUE)
+for (filename in c(task$log, task$data)) {
+  dir_path <- dirname(filename)
+  if (!dir.exists(dir_path)) 
+    dir.create(dir_path, recursive=TRUE)
 }
 
 logger <- getLogger()
@@ -30,11 +36,14 @@ logger$setLevel(config$logging$level)
 logger$addHandler(writeToConsole)
 logger$addHandler(writeToFile, file = task$log)
 
-gwc <- countrycode(task$gwn, "gwn", "gwc")
-if (is.na(gwc))
-  stop(paste("Invalid country code", args$gwn))#
+logger$info("Merge started: country = %s", task$gwc)
 
-logger$info("Merge started: country = %s", gwc)
+nightlight <- nightlight_load(dataset_path(config, config$datasets$noaa))
+gpw <- raster::raster(dataset_path(config, config$datasets$gpw))
 
-logger$info("Merge complete: country = %s", gwc)
+geo_epr_path <- dataset_path(config, config$datasets$geo_epr)
+geoepr <- rgdal::readOGR(dirname(geo_epr_path), basename(geo_epr_path))
+
+logger$info("Merge complete")
+
 
