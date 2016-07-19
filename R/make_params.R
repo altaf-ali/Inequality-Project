@@ -11,7 +11,15 @@ rm(list = ls())
 
 arg_parser <- ArgumentParser()
 arg_parser$add_argument("--config", required=TRUE, help="config file")
-args <- arg_parser$parse_args()
+
+if (interactive()) {
+  output_root <- file.path("Scratch", format(Sys.Date(), "%Y_%m_%d"))
+  args <- list(
+    config = "config.yaml"
+  )
+} else {
+  args <- arg_parser$parse_args()
+}
 
 config <- yaml.load_file(args$config)
 
