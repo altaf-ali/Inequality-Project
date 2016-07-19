@@ -15,6 +15,7 @@ library(cshapes)
 library(mapproj)
 
 # hadleyverse
+library(stringr)
 library(readr)
 library(dplyr)
 
