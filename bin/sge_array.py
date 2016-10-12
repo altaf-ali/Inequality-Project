@@ -12,7 +12,7 @@ import pandas as pd
 defaults = argparse.Namespace(
     max_mem = '2G',
     max_tmpfs = '20G',
-    max_wallclock_time = '23:59:59',
+    max_wallclock_time = '72:00:00',
     max_procs = 1
 )
 
