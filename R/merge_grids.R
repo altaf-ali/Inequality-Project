@@ -18,6 +18,7 @@ library(mapproj)
 library(stringr)
 library(readr)
 library(dplyr)
+library(ggplot2)
 
 rm(list = ls())
 
@@ -31,7 +32,7 @@ if (interactive()) {
   args <- list(
     config = "config.yaml",
     params = file.path(output_root, "params.csv"),
-    task_id = 124
+    task_id = 24
   )
 } else {
   args <- arg_parser$parse_args()
@@ -80,6 +81,7 @@ masked_obj <- function(source_data, spatial_mask) {
   masked_obj <- raster::mask(cropped_obj, mask = spatial_mask)
   data_values <- raster::values(masked_obj)
   list(extent = extent_obj, 
+       masked = masked_obj,
        raster = raster::setValues(masked_obj, seq_along(data_values)), 
        values = data_values)
 }
@@ -99,9 +101,6 @@ country_mask <- subset(cshapes_2012, GWCODE == task$gwn)
 logger$info("Applying country mask to GPW object")
 gpw_obj <- masked_obj(gpw, country_mask)
 show_obj(gpw_obj$raster)
-
-#> values(gpw_obj$raster)[30:32]
-#[1] 5.821633 8.131928 6.471322
 
 logger$info("Converting GPW raster object to polygons")
 gpw_obj$grids <- rasterToPolygons(gpw_obj$raster)
@@ -124,6 +123,7 @@ grid_table <- dplyr::bind_rows(lapply(seq_along(overlays), function(i) {
            group = geoepr_groups@data$group[i])
 }))
 
+#find duplicates
 geoepr_duplicates <- grid_table %>%
   group_by(grid_id) %>%
   summarize(count = n()) %>%
@@ -136,12 +136,12 @@ grid_table <- grid_table %>%
 
 logger$info("Merging nightlight data")
 
-grid_table <- dplyr::bind_rows(lapply(nightlight, function(n) {
+grid_table <- dplyr::bind_rows(lapply(nightlight[1:2], function(n) {
   nightlight_year <- as.numeric(str_match(names(n), "^F\\d{2}(\\d{4})")[2])
   logger$info("Resample nightlight data from %d", nightlight_year)
   
   nightlight_obj <- masked_obj(n, country_mask)
-  nightlight_obj$raster <- raster::resample(nightlight_obj$raster, gpw_obj$raster)
+  nightlight_obj$raster <- raster::resample(nightlight_obj$masked, gpw_obj$masked)
 
   nightlight_table <- data_frame(
     year = nightlight_year,
@@ -163,6 +163,14 @@ grid_table <- grid_table %>%
 logger$info("Writing %s", task$data)
 write_csv(grid_table, task$data, na = "")
 
+# group_means <- grid_table %>%
+#   filter(!is.na(population_density)) %>%
+#   group_by(group, year) %>%
+#   summarize(nightlight_mean = weighted.mean(nightlight, population_density, na.rm = TRUE))
+
+# ggplot(group_means, aes(year, nightlight_mean, color=group)) +
+#   geom_line()
+# 
 # plot(gpw_obj$grids, border = "gray80")
 # gpw_obj$duplicate_grids <- subset(gpw_obj$grids, grid_id %in% geoepr_duplicates$grid_id)
 # plot(gpw_obj$duplicate_grids, add = TRUE, col = "red")

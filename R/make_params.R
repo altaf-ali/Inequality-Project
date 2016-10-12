@@ -43,8 +43,7 @@ params <- data_frame(gwn = unique(geoepr$gwid)) %>%
   mutate(task_id = row_number(),
   	     gwc = countrycode(gwn, "gwn", "gwc"),
   	     log = file.path(output_root, "log", paste0(gwc, ".log")),
-  	     data = file.path(output_root, "data", paste0(gwc, ".csv"))
-  	     ) %>%
+  	     data = file.path(output_root, "data", paste0(gwc, ".csv"))) %>%
   select(task_id, gwc, gwn, log, data) %>%
   write_csv(params_file)
 
