@@ -136,7 +136,7 @@ grid_table <- grid_table %>%
 
 logger$info("Merging nightlight data")
 
-grid_table <- dplyr::bind_rows(lapply(nightlight[1:2], function(n) {
+grid_table <- dplyr::bind_rows(lapply(nightlight, function(n) {
   nightlight_year <- as.numeric(str_match(names(n), "^F\\d{2}(\\d{4})")[2])
   logger$info("Resample nightlight data from %d", nightlight_year)
   
