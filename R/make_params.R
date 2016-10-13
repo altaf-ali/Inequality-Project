@@ -13,7 +13,7 @@ arg_parser <- ArgumentParser()
 arg_parser$add_argument("--config", required=TRUE, help="config file")
 
 if (interactive()) {
-  output_root <- file.path("Scratch", format(Sys.Date(), "%Y_%m_%d"))
+  output_root <- file.path("~Scratch/inequality", format(Sys.Date(), "%Y_%m_%d"))
   args <- list(
     config = "config.yaml"
   )
