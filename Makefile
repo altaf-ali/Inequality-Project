@@ -1,6 +1,7 @@
 CONFIG = $(PWD)/config.yaml
 
 MAKE_PARAMS = $(PWD)/R/make_params.R
+MERGE_FILES = $(PWD)/R/merge_files.R
 
 MERGE_GRIDS_R = $(PWD)/R/merge_grids.R
 MERGE_GRIDS_SH = $(PWD)/bin/merge_grids.sh
@@ -13,6 +14,9 @@ params:
 grids:
 	$(SGE_ARRAY) --config $(CONFIG) $(MERGE_GRIDS_SH) $(MERGE_GRIDS_R)
 
+merge-files:
+	$(MERGE_FILES) --config $(CONFIG)
+	
 all: params grids
 
 .DEFAULT_GOAL := none
