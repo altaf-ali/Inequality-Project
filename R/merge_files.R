@@ -27,10 +27,12 @@ logger$setLevel(config$logging$level)
 logger$addHandler(writeToConsole)
 
 logger$info("Getting a list of all files in %s", output_root)
-files <- list.files(file.path(config$output$root, "latest"), "*.csv", full.names = TRUE)
+files <- list.files(file.path(config$output$root, "latest/data"), "*.csv", full.names = TRUE)
 
 grids <- dplyr::bind_rows(lapply(files, function(f) {
   read.csv(f, stringsAsFactors = FALSE)
 }))
 
-saveRDS(grids, "grids.rds")
+output_file <- file.path(config$output$root, "latest/grids.rds")
+saveRDS(grids, output_file)
+
