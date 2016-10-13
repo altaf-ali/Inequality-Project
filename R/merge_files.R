@@ -30,6 +30,7 @@ logger$info("Getting a list of all files in %s", output_root)
 files <- list.files(file.path(config$output$root, "latest/data"), "*.csv", full.names = TRUE)
 
 grids <- dplyr::bind_rows(lapply(files, function(f) {
+  logger$info("Loading file %s", f)
   read.csv(f, stringsAsFactors = FALSE)
 }))
 
