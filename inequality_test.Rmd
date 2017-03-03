@@ -1,0 +1,18 @@
+---
+title: "inequality_test"
+output: html_document
+---
+
+```{r}
+nightlight_data <- nightlight_data[1:2]
+
+grid_table <- dplyr::bind_rows(lapply(nightlight_data, function(n) { 
+  nightlight_year = as.numeric(str_match(n@data@names, "^F\\d{2}(\\d{4})")[2])
+  nightlight_obj <- raster::resample(masked_obj(n, spatial_data), population_obj)
+  
+  build_grid_table(population_obj, groups_obj, nightlight_obj) %>%
+    mutate(year = nightlight_year) %>%
+    select(year, grid_id, group_id, group, population_density, nightlight)
+}))
+```
+

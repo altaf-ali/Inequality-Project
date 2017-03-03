@@ -1,0 +1,27 @@
+Nighlight Data:
+
+- Coverage from 1992 to 2013
+- Based on satellite composites from National Oceanic and Atmospheric Administration (NOAA)
+- Resolution: 30 arc second grids (with 1 arc second roughly equivalent to 31 meters or 100 feet of ground distance.) 
+- Resample the nightlight data to match the resolution of population grids from GPW (Gridded Population of the World) 
+  at 2.5 arc second or approximately 5km.
+- Nighlight Mean for population groups weighted by grid population density.
+- Grids with overlapping population groups dropped from analysis.
+
+ICEWS Event Data:
+
+- Coverage from 1995 to 2015
+- Over 14 million events, grouped in 4 behavioral categories:
+    - Material Cooperation
+    - Material Conflict
+    - Verbal Cooperation
+    - Verbal Conflict
+- Events aggregated by actor types:
+    - Civilian
+    - Insurgents
+    - Opposition
+    - Rebels
+- Active Days per Month
+  - Number of days in each month when an event of interest occured.
+    
+

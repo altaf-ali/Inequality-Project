@@ -1,0 +1,44 @@
+---
+title: "Grids"
+output: html_document
+---
+
+```{r message=FALSE}
+library(dplyr)
+library(ggplot2)
+```
+
+Load the grids dataset
+
+```{r}
+grids <- readRDS("~/Dropbox/wombat/outputData/grids/grids.rds")
+head(grids)
+```
+
+Subset by country
+
+```{r}
+country = "AFG"
+
+grid_subset <- grids %>%
+  filter(gwc == country) 
+```
+
+Calculate group means
+
+```{r}
+group_means <- grid_subset %>%
+  filter(!is.na(population_density)) %>%
+  group_by(group, year) %>%
+  summarize(nightlight_mean = weighted.mean(nightlight, population_density, na.rm = TRUE))
+
+head(group_means)
+```
+
+Plot the results
+
+```{r}
+ggplot(group_means, aes(year, nightlight_mean, color=group)) +
+  geom_line()
+```
+
